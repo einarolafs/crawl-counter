@@ -4,10 +4,12 @@
       "targets": {
         "node": "current"
       }
-    }],
-    ["minify"]
+    }]
   ],
   "ignore": [
     "**/*.test.js"
+  ],
+  "plugins": [
+    "@babel/plugin-proposal-class-properties"
   ]
 }
