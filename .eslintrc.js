@@ -33,6 +33,7 @@ module.exports = {
     'no-magic-numbers': 'off',
     'one-var': 'off',
     'max-lines-per-function': 'off', //should only be temporary
+    'no-extend-native': 'error',
     'no-console': 'warn',
     'no-plusplus': 'off',
     'no-process-env': 'off',
@@ -46,6 +47,7 @@ module.exports = {
     'object-curly-spacing': ["error", "always"],
     'max-statements': 'off',
     'max-lines': ['error', 330],
+    'max-len': 'off',
     'multiline-ternary': 'off',
     'padded-blocks': ['error', 'never'],
     'padding-line-between-statements': [
