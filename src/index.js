@@ -3,10 +3,12 @@ const FileSync = require('lowdb/adapters/FileSync')
 
 import crawler from './crawler'
 
+const timeout = ms => new Promise(resolve => setTimeout(resolve, ms))
+
 const adapter = new FileSync('temp/db.json')
 const db = low(adapter)
 
-db.defaults({ counts: {}, links: {} })
+db.defaults({ counts: [], links: {} })
   .write()
 
 const crawl = async (url = 'mbl.is') => {
@@ -14,30 +16,29 @@ const crawl = async (url = 'mbl.is') => {
     const counts = db.get('counts').value()
     const links = db.get('links').value()
 
-    if (!links[url]) {
-      console.log('found, moving on')
-
+    if (!links[url] && Object.keys(links).length > 0) {
       return links
     }
 
-    const { counts: newCounts, links: newLinks } = await crawler(url)
+    const content = await crawler(url)
 
-    if (newCounts) {
-      Object.entries(newCounts).forEach(([key, value]) => {
-        if (counts[key]) {
-          counts[key] += value
+    const { counts: newCounts, links: newLinks } = content
 
-          return null
-        }
+    newCounts.forEach((newWord) => {
+      const { word, count } = newWord
+      const existingWord = counts.findIndex(item => item.word === word)
 
-        counts[key] = value
+      if (existingWord >= 0) {
+        counts[existingWord].count += count
 
         return null
-      })
-    }
-    else {
-      console.log('not defined', newCounts, url)
-    }
+      }
+
+      return counts.push(newWord)
+    })
+
+    db.set('counts', counts).write()
+
 
     Object.entries(newLinks).forEach(([key, value]) => {
       if (!links[key]) {
@@ -48,7 +49,6 @@ const crawl = async (url = 'mbl.is') => {
     links[url] = false
 
     db.set('links', links).write()
-    db.set('counts', counts).write()
 
     return newLinks
   }
@@ -60,14 +60,19 @@ const crawl = async (url = 'mbl.is') => {
 }
 
 crawl('http://mbl.is/')
-  .then(links => Promise.all(Object.keys(links).map(async (key) => {
-    if (links[key]) {
-      const newLinks = await crawl(key)
+  .then(async (data) => {
+    const links = Object.keys(data)
+    let result = null
 
-      return newLinks
+    for (const link of links) {
+      if (data[link]) {
+        const newLinks = await crawl(link) // eslint-disable-line no-await-in-loop
+
+        result = newLinks
+      }
     }
 
-    return null
-  })))
+    return result
+  })
   .catch(error => console.log(error))
 

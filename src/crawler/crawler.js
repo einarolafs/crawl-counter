@@ -38,57 +38,68 @@ const textContent = (body) => {
 
 const getCount = (content) => {
   try {
-    const wordCount = new Map()
-    const wordCountObject = {}
+    const wordCount = []
 
     content.toLowerCase()
-      .split(' ')
+      .split(/\s/u)
       .forEach((word) => {
-        if (!isNaN(word)) {
+        // const matchDate = new RegExp(/([0-9]{2}|[0-9]{1}).([0-9]{2}|[0-9]{1}).[0-9]{4}/gu, 'gu')
+        const cleanUpString = (value) => {
+          const regex = /^(@|-)|([!-\-/-?[-`{-~¡-¿–-⁊]|÷)|(,|\.)$/gu
+
+          return value.replace(regex, '').replace(regex, '')
+        }
+        const hasNoLetters = value => !value.match(/[A-Za-zÀ-ÖØ-öø-ÿ]/gu)
+        const cleanWord = cleanUpString(word)
+
+        if (!isNaN(cleanWord) || hasNoLetters(cleanWord)) {
           return null
         }
 
-        const currentWordCount = wordCount.get(word) || 0
+        const currentWordCount = wordCount.findIndex(item => item.word === cleanWord)
 
-        wordCount.set(word, currentWordCount + 1)
+        if (currentWordCount >= 0) {
+          wordCount[currentWordCount].count += 1
 
-        return null
+          return null
+        }
+
+        wordCount.push({ word: cleanWord, count: 1 }) // eslint-disable-line sort-keys
+
+        return wordCount
       })
 
-    const wordCountSorted = [...wordCount.entries()]
-      .sort((first, next) => next[1] - first[1])
+    const wordCountSorted = wordCount.sort((first, next) => next.count - first.count)
 
-    wordCountSorted.forEach(([key, value]) => {
-      wordCountObject[key] = value
-    })
-
-    return wordCountObject
+    return wordCountSorted
   }
   catch (error) {
     return error
   }
 }
 
-const getLinks = (content, url) => {
-  const normalizeURL = url[url.length - 1] === '/' ? url.slice(0, url.length - 1) : url
+const getLinks = (content, domain) => {
+  const normalizeDomain = domain[domain.length - 1] === '/' ? domain.slice(0, domain.length - 1) : domain
   const linksArray = content.match(/href="([^'"]+)/gum)
   const links = {}
 
   linksArray.forEach((link) => {
     let cleanLink = link.replace('href="', '')
     const startsWithHash = cleanLink.startsWith('#')
-    const isAnotherDomain = cleanLink.startsWith('http') && !cleanLink.includes(url)
+    const isAnotherDomain = cleanLink.startsWith('http') && !cleanLink.includes(domain)
+    const isInvalid = cleanLink.match(/tel:|mailto:/ug)
 
-    if (startsWithHash || isAnotherDomain) {
+    if (startsWithHash || isAnotherDomain || isInvalid) {
       return null
     }
 
-    cleanLink = cleanLink.replace(/#[a-zA-Z0-9]+/gu, '')
+    // Remove hashtags
+    cleanLink = cleanLink.replace(/#.+/gu, '')
 
     if (!Object.keys(links).includes(link)) {
       cleanLink.startsWith('http')
         ? links[cleanLink] = true
-        : links[`${normalizeURL}${cleanLink}`] = true
+        : links[`${normalizeDomain}${cleanLink}`] = true
     }
 
     return null
@@ -97,33 +108,33 @@ const getLinks = (content, url) => {
   return links
 }
 
-const crawler = async function crawler (domain) {
+const crawler = async function crawler (url) {
   try {
-    const url = () => {
-      if (domain.startsWith('http')) {
-        return domain
-      }
+    const normalizeUrl = url.startsWith('http') ? url : `http://${url}`
 
-      return `http://${domain}`
-    }
+    const [urlDomain] = normalizeUrl.match(/http(?:s)?:\/\/(?:[\w-]+\.)*([\w-]{1,63})(?:\.(?:\w{3}|\w{2}))(?:$|\/)/gu)
 
     const requestOptions = {
       header: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36' // eslint-disable-line max-len
       },
-      uri: url()
+      uri: normalizeUrl
     }
 
     const html = await request(requestOptions)
     const $ = cheerio.load(html, { decodeEntities: false }) // eslint-disable-line id-length, max-len
     const body = $('body')
 
-    return {
+    const results = {
       counts: getCount(textContent(body)),
-      links: getLinks(body.html(), url())
+      links: getLinks(body.html(), urlDomain)
     }
+
+    return results
   }
   catch (error) {
+    console.log('error', url)
+
     return error
   }
 }

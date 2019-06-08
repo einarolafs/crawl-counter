@@ -24,6 +24,7 @@ module.exports = {
     'brace-style': ["error", "stroustrup"],
     'arrow-parens': ['error', 'as-needed', { requireForBlockBody: true }],
     'array-element-newline': ["error", { "minItems": 4 }],
+    "capitalized-comments": "off",
     'dot-location': 'off',
     'eol-last': ['error', 'always'],
     'guard-for-in': 'off',
