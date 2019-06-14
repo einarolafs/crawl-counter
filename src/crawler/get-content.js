@@ -3,14 +3,10 @@ import request from 'request-promise'
 import { stripAwayHtmlContent, cleanUpString } from './cleaners'
 import { hasNoLetters, isAnotherDomain, invalidLink, domainFromUrl } from './selectors'
 
-const textContent = (body) => {
-  const content = stripAwayHtmlContent(body).html()
-    .replace(/<!--(.|\s)*?-->/gui, '')
-    .replace(/<[^>]*>/gui, ' ')
-    .replace(/\s\s+/gu, ' ')
-
-  return unescape(content)
-}
+const textContent = body => stripAwayHtmlContent(body)
+  .replace(/<!--(.|\s)*?-->/gui, '')
+  .replace(/<[^>]*>/gui, ' ')
+  .replace(/\s\s+/gu, ' ')
 
 const getCount = content => content.toLowerCase()
   .split(/\s/u)
@@ -66,14 +62,14 @@ const getContent = async (url) => {
     }
 
     const html = await request(requestOptions)
-    const $ = cheerio.load(html, { decodeEntities: false }) // eslint-disable-line id-length
-    const body = $('body')
-    const content = textContent(body)
+    const content = cheerio.load(html, { decodeEntities: false }) // eslint-disable-line id-length
+
+    const text = textContent(content)
     const domain = domainFromUrl(url)
 
     const results = {
-      counts: getCount(content),
-      links: getLinks(body.html(), domain)
+      counts: getCount(text),
+      links: getLinks(content('body').html(), domain)
     }
 
     return results

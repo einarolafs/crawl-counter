@@ -1,41 +1,6 @@
 
-import db from '../database/database'
+import db from '../database'
 import getContent from './get-content'
-
-const addCountToDb = (words) => {
-  words.forEach((newWord) => {
-    const { word, count } = newWord
-    const exists = db.get('counts').find({ word })
-      .value()
-
-    if (exists) {
-      const newCount = exists.count + count
-
-      return db.get('counts').find({ word })
-        .assign({ count: newCount })
-        .write()
-    }
-
-    return db.get('counts').push(newWord)
-      .write()
-  })
-}
-
-const addLinksToDb = (links, url) => {
-  const newLinks = { ...links }
-
-  Object.entries(newLinks).forEach(([key, value]) => {
-    if (!newLinks[key]) {
-      newLinks[key] = value
-    }
-  })
-
-  newLinks[url] = false
-
-  db.set('links', newLinks).write()
-
-  return newLinks
-}
 
 const crawler = async (url) => {
   try {
@@ -51,9 +16,7 @@ const crawler = async (url) => {
 
     const content = await getContent(url)
 
-    addCountToDb(content.counts)
-
-    return addLinksToDb(content.links, url)
+    return db.addContent(content, url)
   }
   catch (error) {
     console.log('There is an error', error)
