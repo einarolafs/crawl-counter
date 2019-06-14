@@ -2,7 +2,7 @@
   "name": "crawl",
   "version": "0.0.1",
   "description": "crawl for words",
-  "main": "build/index.js",
+  "main": "dist/index.js",
   "author": "Einar Ólafsson",
   "license": "ISC",
   "dependencies": {
@@ -21,6 +21,7 @@
     "@babel/register": "^7.4.4",
     "ava": "1.4.1",
     "babel-eslint": "^10.0.1",
+    "babel-plugin-minify-mangle-names": "^0.5.0",
     "babel-preset-minify": "^0.5.0",
     "eslint": "^5.16.0",
     "eslint-plugin-ava": "^6.0.0",
@@ -31,8 +32,8 @@
     "eslint-plugin-promise": "^4.1.1"
   },
   "scripts": {
-    "start": "babel src -d build && node build/index.js",
-    "build": "rm -rf build && babel src -d build",
+    "start": "babel src -d dist && node dist/index.js",
+    "build": "rm -rf dist && babel src -d dist",
     "test": "ava",
     "lint": "eslint . --cache"
   },

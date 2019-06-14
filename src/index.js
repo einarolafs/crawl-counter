@@ -1,6 +1,6 @@
-const low = require('lowdb')
-const FileSync = require('lowdb/adapters/FileSync')
-
+#!/usr/bin/env node
+import low from 'lowdb'
+import FileSync from 'lowdb/adapters/FileSync'
 import crawler from './crawler'
 
 const timeout = ms => new Promise(resolve => setTimeout(resolve, ms))
@@ -11,9 +11,12 @@ const db = low(adapter)
 db.defaults({ counts: [], links: {} })
   .write()
 
-const crawl = async (url = 'mbl.is') => {
+const crawl = async (url) => {
   try {
-    const counts = db.get('counts').value()
+    if (!url) {
+      throw Error('Please provide a link')
+    }
+
     const links = db.get('links').value()
 
     if (!links[url] && Object.keys(links).length > 0) {
@@ -26,19 +29,20 @@ const crawl = async (url = 'mbl.is') => {
 
     newCounts.forEach((newWord) => {
       const { word, count } = newWord
-      const existingWord = counts.findIndex(item => item.word === word)
+      const exists = db.get('counts').find({ word })
+        .value()
 
-      if (existingWord >= 0) {
-        counts[existingWord].count += count
+      if (exists) {
+        const newCount = exists.count + count
 
-        return null
+        return db.get('counts').find({ word })
+          .assign({ count: newCount })
+          .write()
       }
 
-      return counts.push(newWord)
+      return db.get('counts').push(newWord)
+        .write()
     })
-
-    db.set('counts', counts).write()
-
 
     Object.entries(newLinks).forEach(([key, value]) => {
       if (!links[key]) {
@@ -54,25 +58,17 @@ const crawl = async (url = 'mbl.is') => {
   }
   catch (error) {
     console.log('There is an error', error)
-
-    return error
   }
 }
 
-crawl('http://mbl.is/')
-  .then(async (data) => {
-    const links = Object.keys(data)
-    let result = null
+(async () => {
+  const data = await crawl('http://mbl.is/')
+  const links = Object.keys(data)
 
-    for (const link of links) {
-      if (data[link]) {
-        const newLinks = await crawl(link) // eslint-disable-line no-await-in-loop
-
-        result = newLinks
-      }
+  for (const link of links) {
+    if (data[link]) {
+      await timeout(100) // eslint-disable-line no-await-in-loop
+      await crawl(link) // eslint-disable-line no-await-in-loop
     }
-
-    return result
-  })
-  .catch(error => console.log(error))
-
+  }
+})()

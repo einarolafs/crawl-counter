@@ -1,27 +1,28 @@
 import cheerio from 'cheerio'
 import request from 'request-promise'
 
+const htmlItemsToStripAway = [
+  'style',
+  'script',
+  '.tagcloud',
+  '[class*=nav]',
+  'header',
+  'link',
+  'nav',
+  '[class*=fb-root]',
+  'img'
+]
+
+const cleanUpString = (value) => {
+  const regex = /^(@|-)|([!-\-/-?[-`{-~¡-¿–-⁊]|÷)|(,|\.)$/gu
+
+  return value.replace(regex, '').replace(regex, '')
+}
+
+const hasNoLetters = value => !value.match(/[A-Za-zÀ-ÖØ-öø-ÿ]/gu)
+
 const textContent = (body) => {
   try {
-    const htmlItemsToStripAway = [
-      'style',
-      'script',
-      '.tagcloud',
-      '[class*=nav]',
-      'header',
-      '[class*=header]',
-      '[class*=menu]',
-      'link',
-      'nav',
-      '[class*=fb-root]',
-      '[class*=footer]',
-      'footer',
-      '[class*=extras]',
-      '[class*=banner]',
-      'img',
-      '[class*=widget]'
-    ]
-
     body.find(htmlItemsToStripAway.join()).remove()
 
     const content = body.html()
@@ -38,40 +39,23 @@ const textContent = (body) => {
 
 const getCount = (content) => {
   try {
-    const wordCount = []
-
-    content.toLowerCase()
+    return content.toLowerCase()
       .split(/\s/u)
-      .forEach((word) => {
-        // const matchDate = new RegExp(/([0-9]{2}|[0-9]{1}).([0-9]{2}|[0-9]{1}).[0-9]{4}/gu, 'gu')
-        const cleanUpString = (value) => {
-          const regex = /^(@|-)|([!-\-/-?[-`{-~¡-¿–-⁊]|÷)|(,|\.)$/gu
+      .reduce((acc, value) => {
+        const word = cleanUpString(value)
 
-          return value.replace(regex, '').replace(regex, '')
-        }
-        const hasNoLetters = value => !value.match(/[A-Za-zÀ-ÖØ-öø-ÿ]/gu)
-        const cleanWord = cleanUpString(word)
-
-        if (!isNaN(cleanWord) || hasNoLetters(cleanWord)) {
-          return null
+        if (!isNaN(word) || hasNoLetters(word)) {
+          return acc
         }
 
-        const currentWordCount = wordCount.findIndex(item => item.word === cleanWord)
+        const findWord = acc.findIndex(item => item.word === word) || acc.length
+        const index = findWord >= 0 ? findWord : acc.length
+        const { count = 0 } = acc[index] || []
 
-        if (currentWordCount >= 0) {
-          wordCount[currentWordCount].count += 1
+        acc[index] = { count: count + 1, word }
 
-          return null
-        }
-
-        wordCount.push({ word: cleanWord, count: 1 }) // eslint-disable-line sort-keys
-
-        return wordCount
-      })
-
-    const wordCountSorted = wordCount.sort((first, next) => next.count - first.count)
-
-    return wordCountSorted
+        return acc
+      }, [])
   }
   catch (error) {
     return error
@@ -116,13 +100,13 @@ const crawler = async function crawler (url) {
 
     const requestOptions = {
       header: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36' // eslint-disable-line max-len
+        'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36'
       },
       uri: normalizeUrl
     }
 
     const html = await request(requestOptions)
-    const $ = cheerio.load(html, { decodeEntities: false }) // eslint-disable-line id-length, max-len
+    const $ = cheerio.load(html, { decodeEntities: false }) // eslint-disable-line id-length
     const body = $('body')
 
     const results = {
@@ -133,8 +117,6 @@ const crawler = async function crawler (url) {
     return results
   }
   catch (error) {
-    console.log('error', url)
-
     return error
   }
 }
