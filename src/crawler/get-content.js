@@ -1,6 +1,6 @@
 import cheerio from 'cheerio'
 import request from 'request-promise'
-import { stripAwayHtmlContent, cleanUpString } from './utils'
+import { stripAwayHtmlContent, cleanUpString } from './cleaners'
 import { hasNoLetters } from './selectors'
 
 const textContent = (body) => {

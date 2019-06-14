@@ -1,3 +1,3 @@
-import crawler from './get-content'
+import crawler from './crawler'
 
 export default crawler
