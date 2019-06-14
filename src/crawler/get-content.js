@@ -1,46 +1,34 @@
 import cheerio from 'cheerio'
 import request from 'request-promise'
 import { stripAwayHtmlContent, cleanUpString } from './cleaners'
-import { hasNoLetters } from './selectors'
+import { hasNoLetters, isAnotherDomain, invalidLink, domainFromUrl } from './selectors'
 
 const textContent = (body) => {
-  try {
-    const content = stripAwayHtmlContent(body).html()
-      .replace(/<!--(.|\s)*?-->/gui, '')
-      .replace(/<[^>]*>/gui, ' ')
-      .replace(/\s\s+/gu, ' ')
+  const content = stripAwayHtmlContent(body).html()
+    .replace(/<!--(.|\s)*?-->/gui, '')
+    .replace(/<[^>]*>/gui, ' ')
+    .replace(/\s\s+/gu, ' ')
 
-    return unescape(content)
-  }
-  catch (error) {
-    return error
-  }
+  return unescape(content)
 }
 
-const getCount = (content) => {
-  try {
-    return content.toLowerCase()
-      .split(/\s/u)
-      .reduce((acc, value) => {
-        const word = cleanUpString(value)
+const getCount = content => content.toLowerCase()
+  .split(/\s/u)
+  .reduce((acc, value) => {
+    const word = cleanUpString(value)
 
-        if (!isNaN(word) || hasNoLetters(word)) {
-          return acc
-        }
+    if (!isNaN(word) || hasNoLetters(word)) {
+      return acc
+    }
 
-        const findWord = acc.findIndex(item => item.word === word) || acc.length
-        const index = findWord >= 0 ? findWord : acc.length
-        const { count = 0 } = acc[index] || []
+    const findWord = acc.findIndex(item => item.word === word) || acc.length
+    const index = findWord >= 0 ? findWord : acc.length
+    const { count = 0 } = acc[index] || []
 
-        acc[index] = { count: count + 1, word }
+    acc[index] = { count: count + 1, word }
 
-        return acc
-      }, [])
-  }
-  catch (error) {
-    return error
-  }
-}
+    return acc
+  }, [])
 
 const getLinks = (content, domain) => {
   const normalizeDomain = domain[domain.length - 1] === '/' ? domain.slice(0, domain.length - 1) : domain
@@ -48,17 +36,11 @@ const getLinks = (content, domain) => {
   const links = {}
 
   linksArray.forEach((link) => {
-    let cleanLink = link.replace('href="', '')
-    const startsWithHash = cleanLink.startsWith('#')
-    const isAnotherDomain = cleanLink.startsWith('http') && !cleanLink.includes(domain)
-    const isInvalid = cleanLink.match(/tel:|mailto:/ug)
+    const cleanLink = link.replace(/href="|#.+/gu, '')
 
-    if (startsWithHash || isAnotherDomain || isInvalid) {
+    if (!cleanLink || isAnotherDomain(cleanLink, domain) || invalidLink(cleanLink)) {
       return null
     }
-
-    // Remove hashtags
-    cleanLink = cleanLink.replace(/#.+/gu, '')
 
     if (!Object.keys(links).includes(link)) {
       cleanLink.startsWith('http')
@@ -76,8 +58,6 @@ const getContent = async (url) => {
   try {
     const normalizeUrl = url.startsWith('http') ? url : `http://${url}`
 
-    const [urlDomain] = normalizeUrl.match(/http(?:s)?:\/\/(?:[\w-]+\.)*([\w-]{1,63})(?:\.(?:\w{3}|\w{2}))(?:$|\/)/gu)
-
     const requestOptions = {
       header: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36'
@@ -89,10 +69,11 @@ const getContent = async (url) => {
     const $ = cheerio.load(html, { decodeEntities: false }) // eslint-disable-line id-length
     const body = $('body')
     const content = textContent(body)
+    const domain = domainFromUrl(url)
 
     const results = {
       counts: getCount(content),
-      links: getLinks(body.html(), urlDomain)
+      links: getLinks(body.html(), domain)
     }
 
     return results
