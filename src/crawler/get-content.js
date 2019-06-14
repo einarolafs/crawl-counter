@@ -1,31 +1,11 @@
 import cheerio from 'cheerio'
 import request from 'request-promise'
-
-const htmlItemsToStripAway = [
-  'style',
-  'script',
-  '.tagcloud',
-  '[class*=nav]',
-  'header',
-  'link',
-  'nav',
-  '[class*=fb-root]',
-  'img'
-]
-
-const cleanUpString = (value) => {
-  const regex = /^(@|-)|([!-\-/-?[-`{-~¡-¿–-⁊]|÷)|(,|\.)$/gu
-
-  return value.replace(regex, '').replace(regex, '')
-}
-
-const hasNoLetters = value => !value.match(/[A-Za-zÀ-ÖØ-öø-ÿ]/gu)
+import { stripAwayHtmlContent, cleanUpString } from './utils'
+import { hasNoLetters } from './selectors'
 
 const textContent = (body) => {
   try {
-    body.find(htmlItemsToStripAway.join()).remove()
-
-    const content = body.html()
+    const content = stripAwayHtmlContent(body).html()
       .replace(/<!--(.|\s)*?-->/gui, '')
       .replace(/<[^>]*>/gui, ' ')
       .replace(/\s\s+/gu, ' ')
@@ -92,7 +72,7 @@ const getLinks = (content, domain) => {
   return links
 }
 
-const crawler = async function crawler (url) {
+const getContent = async (url) => {
   try {
     const normalizeUrl = url.startsWith('http') ? url : `http://${url}`
 
@@ -108,9 +88,10 @@ const crawler = async function crawler (url) {
     const html = await request(requestOptions)
     const $ = cheerio.load(html, { decodeEntities: false }) // eslint-disable-line id-length
     const body = $('body')
+    const content = textContent(body)
 
     const results = {
-      counts: getCount(textContent(body)),
+      counts: getCount(content),
       links: getLinks(body.html(), urlDomain)
     }
 
@@ -122,4 +103,4 @@ const crawler = async function crawler (url) {
 }
 
 
-export default crawler
+export default getContent

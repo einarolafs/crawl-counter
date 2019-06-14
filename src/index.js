@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// Look into using http://www.tingodb.com/
 import low from 'lowdb'
 import FileSync from 'lowdb/adapters/FileSync'
 import crawler from './crawler'
@@ -58,6 +59,8 @@ const crawl = async (url) => {
   }
   catch (error) {
     console.log('There is an error', error)
+
+    return error
   }
 }
 
