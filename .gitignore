@@ -75,6 +75,6 @@ typings/
 files/
 build/
 dist/
-temp/*
+temp/
 
 .DS_Store
