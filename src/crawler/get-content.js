@@ -3,10 +3,43 @@ import request from 'request-promise'
 import { stripAwayHtmlContent, cleanUpString } from './cleaners'
 import { hasNoLetters, isAnotherDomain, invalidLink, domainFromUrl } from './selectors'
 
-const textContent = body => stripAwayHtmlContent(body)
-  .replace(/<!--(.|\s)*?-->/gui, '')
-  .replace(/<[^>]*>/gui, ' ')
-  .replace(/\s\s+/gu, ' ')
+const getElementContent = (html, selectors) => {
+  const content = selectors.map((selector) => {
+    if (!html(selector)) {
+      return null
+    }
+    if (selector.includes('meta')) {
+      return html(selector).attr('content')
+    }
+    if (selector.match('^img')) {
+      const item = html(selector).map(() => html(this).attr('alt')).get()
+
+      console.log('item >>>', item)
+    }
+
+    return null
+  })
+
+  console.log(content)
+
+  return content
+}
+
+const textContent = (html) => {
+  getElementContent(html, [
+    'meta[name=description]',
+    'meta[name=title]',
+    'img',
+    'title'
+  ])
+
+  const getRest = stripAwayHtmlContent(html)
+    .replace(/<!--(.|\s)*?-->/gui, '')
+    .replace(/<[^>]*>/gui, ' ')
+    .replace(/\s\s+/gu, ' ')
+
+  return getRest
+}
 
 const getCount = content => content.toLowerCase()
   .split(/\s/u)
