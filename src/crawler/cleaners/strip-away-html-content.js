@@ -26,7 +26,11 @@ const stripAwayHtmlContent = (content) => {
 
   fs.writeFile(
     'content.html', content.html(), 'utf8',
-    err => console.log(err)
+    (err) => {
+      if (err) {
+        console.log('write file error', err)
+      }
+    }
   )
 
   return content.html()
