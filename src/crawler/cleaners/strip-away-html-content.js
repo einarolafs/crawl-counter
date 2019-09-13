@@ -33,7 +33,7 @@ const stripAwayHtmlContent = (content) => {
     }
   )
 
-  return content.html()
+  return content.html().replace(/(?<comments><!--(.|\s)*?-->)|(?<HTMLelements><[^>]*>)|(?<spaces>\s\s+)|(?<lineBreaks>\r?\n|\r)/gui, ' ')
 }
 
 export default stripAwayHtmlContent

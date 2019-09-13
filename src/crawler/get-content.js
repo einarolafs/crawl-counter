@@ -4,9 +4,6 @@ import { stripAwayHtmlContent, cleanUpString } from './cleaners'
 import { hasNoLetters, isAnotherDomain, invalidLink, domainFromUrl } from './selectors'
 
 const textContent = body => stripAwayHtmlContent(body)
-  .replace(/<!--(.|\s)*?-->/gui, '')
-  .replace(/<[^>]*>/gui, ' ')
-  .replace(/\s\s+/gu, ' ')
 
 const getCount = content => content.toLowerCase()
   .split(/\s/u)
