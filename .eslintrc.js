@@ -27,6 +27,7 @@ module.exports = {
     "capitalized-comments": "off",
     'dot-location': 'off',
     'eol-last': ['error', 'always'],
+    'function-call-argument-newline': 'off',
     'guard-for-in': 'off',
     'id-length': ['error', { 'exceptions': ['t'] }],
     'indent': ['error', 2, { 'SwitchCase': 1 }],
