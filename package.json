@@ -41,7 +41,7 @@
     "start": "babel src -d dist && node dist/index.js",
     "build": "rm -rf dist && babel src -d dist",
     "test": "ava",
-    "lint": "eslint . --cache",
+    "lint": "eslint src --cache",
     "docs": "jsdoc -d ./docs -r ./src && live-server docs"
   }
 }
