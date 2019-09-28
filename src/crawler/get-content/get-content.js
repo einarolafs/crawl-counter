@@ -11,10 +11,14 @@ const textContent = body => stripAwayHtmlContent(body)
  * This function get the text content only from a html source.
  * It uses {@link https://github.com/request/request-promise Request-Promise} to fetch the content from a url, as well as {@link https://cheerio.js.org/ cheerio} to create a jQuery like selectors around the html source content to more easily manipulate it.
  * @memberof module:getContent
+ * @async
  * @function
+ * @requires cleaners/stripAwayHtmlContent
+ * @requires selectors/domainFromUrl
  * @param {string} url
- * @return {string}
+ * @return {object} - returns an array of links
  */
+
 const getContent = async (url) => {
   try {
     const normalizeUrl = url.startsWith('http') ? url : `http://${url}`

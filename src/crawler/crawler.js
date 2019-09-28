@@ -19,8 +19,6 @@ const crawler = async (url) => {
     return db.addContent(content, url)
   }
   catch (error) {
-    console.log('There is an error', error)
-
     return error
   }
 }
