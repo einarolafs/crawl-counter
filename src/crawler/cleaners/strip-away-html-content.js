@@ -1,5 +1,11 @@
 const fs = require('fs')
 
+/**
+ * Remove any html specific content from a html source and return only text content
+ * @function
+ * @param {string} content - Html source
+ * @return {string}
+ */
 const stripAwayHtmlContent = (content) => {
   const itemsToRemove = [
     'style',
