@@ -2,6 +2,7 @@ const fs = require('fs')
 
 /**
  * Remove any html specific content from a html source and return only text content
+ * @memberof module:cleaners
  * @function
  * @param {string} content - Html source
  * @return {string}

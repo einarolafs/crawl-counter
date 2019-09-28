@@ -1,5 +1,6 @@
 /**
  * A function that extracts a domain from a url
+ * @memberof module:selectors
  * @function
  * @param {string} url - The url string that will be extracted
  * @return {string} - The domain extracted from the url
