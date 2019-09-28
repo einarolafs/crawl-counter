@@ -76,6 +76,7 @@ files/
 build/
 dist/
 temp/
+docs/
 
 /content.html
 

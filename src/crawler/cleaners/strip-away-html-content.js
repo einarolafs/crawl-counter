@@ -1,5 +1,12 @@
 const fs = require('fs')
 
+/**
+ * Remove any html specific content from a html source and return only text content
+ * @memberof module:cleaners
+ * @function
+ * @param {string} content - Html source
+ * @return {string}
+ */
 const stripAwayHtmlContent = (content) => {
   const itemsToRemove = [
     'style',
@@ -33,7 +40,7 @@ const stripAwayHtmlContent = (content) => {
     }
   )
 
-  return content.html()
+  return content.html().replace(/(?<comments><!--(.|\s)*?-->)|(?<HTMLelements><[^>]*>)|(?<spaces>\s\s+)|(?<lineBreaks>\r?\n|\r)/gui, ' ')
 }
 
 export default stripAwayHtmlContent
