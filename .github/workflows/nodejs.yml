@@ -26,7 +26,7 @@ jobs:
     - name: run tests
       run: |
         npm run test
-      name: run build
+    - name: run build
       run: |
         npm run build
       env:
