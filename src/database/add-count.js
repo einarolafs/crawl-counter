@@ -1,5 +1,9 @@
 const addCount = (words, db) => {
-  words.forEach((newWord) => {
+  if (!words) {
+    return null
+  }
+
+  return words.forEach((newWord) => {
     const { word, count } = newWord
     const exists = db.get('counts').find({ word })
       .value()
