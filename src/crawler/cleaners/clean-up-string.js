@@ -1,9 +1,10 @@
 /**
  * Remove any non-letter character from a word
+ *
  * @memberof module:cleaners
  * @function
- * @param {string} value
- * @return {string}
+ * @param {string} value - string
+ * @returns {string} - returns a string without any special characters
  */
 const cleanUpString = (value) => {
   const regex = /^(@|-)|([!-\-/-?[-`{-~¡-¿–-⁊]|÷)|(,|\.)$/gu

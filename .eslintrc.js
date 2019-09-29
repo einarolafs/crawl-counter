@@ -11,14 +11,16 @@ module.exports = {
     'import',
     'node',
     'promise',
-    'filenames'
+    'filenames',
+    'jsdoc'
   ],
   extends: [
     'eslint:all',
     'plugin:import/errors',
     'plugin:import/warnings',
     'plugin:promise/recommended',
-    'plugin:ava/recommended'
+    'plugin:ava/recommended',
+    'plugin:jsdoc/recommended'
   ],
   rules: {
     'brace-style': ["error", "stroustrup"],

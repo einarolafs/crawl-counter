@@ -5,18 +5,25 @@ import { domainFromUrl } from '../selectors'
 import getLinks from './get-links'
 import getCount from './get-count'
 
-const textContent = body => stripAwayHtmlContent(body)
+/**
+ * @typedef {Promise} getContentStructure
+ * @property {Array} counts - Word count from html source
+ * @property {Array} links - Links from same domain found in html source
+ */
 
 /**
  * This function get the text content only from a html source.
  * It uses {@link https://github.com/request/request-promise Request-Promise} to fetch the content from a url, as well as {@link https://cheerio.js.org/ cheerio} to create a jQuery like selectors around the html source content to more easily manipulate it.
+ *
  * @memberof module:getContent
  * @async
  * @function
  * @requires cleaners/stripAwayHtmlContent
  * @requires selectors/domainFromUrl
+ * @requires {@link https://cheerio.js.org/ cheerio}
+ * @requires {@link https://github.com/request/request-promise Request-Promise}
  * @param {string} url
- * @return {object} - returns an array of links
+ * @returns {getContentStructure} - Promise that will return a object containing word count and links found
  */
 
 const getContent = async (url) => {
@@ -33,15 +40,13 @@ const getContent = async (url) => {
     const html = await request(requestOptions)
     const content = cheerio.load(html, { decodeEntities: false })
 
-    const text = textContent(content)
+    const text = stripAwayHtmlContent(content)
     const domain = domainFromUrl(url)
 
-    const results = {
+    return {
       counts: getCount(text),
       links: getLinks(content('body').html(), domain)
     }
-
-    return results
   }
   catch (error) {
     return error

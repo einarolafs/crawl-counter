@@ -1,9 +1,10 @@
 /**
- * Remove any html specific content from a cheerio object and return only text content
+ * Remove any html specific content from a {@link https://cheerio.js.org/ cheerio} object and return only text content
+ *
  * @memberof module:cleaners
  * @function
- * @param {object} content - Cheerio object
- * @return {string}
+ * @param {object} content - {@link https://cheerio.js.org/ cheerio} object
+ * @returns {string} - text only content without any html elements
  */
 const stripAwayHtmlContent = (content) => {
   const itemsToRemove = [
