@@ -1,11 +1,10 @@
-const fs = require('fs')
-
 /**
- * Remove any html specific content from a html source and return only text content
+ * Remove any html specific content from a {@link https://cheerio.js.org/ cheerio} object and return only text content
+ *
  * @memberof module:cleaners
  * @function
- * @param {string} content - Html source
- * @return {string}
+ * @param {object} content - {@link https://cheerio.js.org/ cheerio} object
+ * @returns {string} - text only content without any html elements
  */
 const stripAwayHtmlContent = (content) => {
   const itemsToRemove = [
@@ -31,16 +30,9 @@ const stripAwayHtmlContent = (content) => {
 
   content(itemsToRemove.join()).remove()
 
-  fs.writeFile(
-    'content.html', content.html(), 'utf8',
-    (err) => {
-      if (err) {
-        console.log('write file error', err)
-      }
-    }
-  )
-
-  return content.html().replace(/(?<comments><!--(.|\s)*?-->)|(?<HTMLelements><[^>]*>)|(?<spaces>\s\s+)|(?<lineBreaks>\r?\n|\r)/gui, ' ')
+  return content.html()
+    .replace(/(?<comments><!--(.|\s)*?-->)|(?<HTMLelements><[^>]*>)|(?<spaces>\s\s+)|(?<lineBreaks>\r?\n|\r)/gui, ' ')
+    .trim()
 }
 
 export default stripAwayHtmlContent
