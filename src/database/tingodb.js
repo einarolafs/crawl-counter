@@ -1,3 +1,4 @@
+/* eslint-disable */
 const Engine = require('tingodb')()
 const assert = require('assert')
 
