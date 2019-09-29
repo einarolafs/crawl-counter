@@ -35,6 +35,7 @@
     "eslint-plugin-jsdoc": "^15.9.5",
     "eslint-plugin-node": "^10.0.0",
     "eslint-plugin-promise": "^4.2.1",
+    "husky": "^3.0.7",
     "jsdoc": "^3.6.3",
     "live-server": "^1.2.1"
   },
@@ -45,5 +46,10 @@
     "test": "ava",
     "lint": "eslint src --cache",
     "docs": "jsdoc -d ./docs -t node_modules/docdash -r ./src && live-server docs"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm test && npm lint"
+    }
   }
 }
