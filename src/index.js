@@ -22,11 +22,15 @@ const runCrawler = async () => {
     const data = await crawler(url, dbProcess)
     const links = Object.keys(data)
 
+    const results = []
+
     for (const link of links) {
       if (data[link]) {
-        await crawler(link, dbProcess) // eslint-disable-line no-await-in-loop
+        results.push(crawler(link, dbProcess))
       }
     }
+
+    await Promise.all(results)
 
     spinner.succeed('Crawling successful, note that the crawling is only shallow, run script again to crawl more links')
 
