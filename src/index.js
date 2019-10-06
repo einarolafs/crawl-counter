@@ -1,29 +1,46 @@
 #!/usr/bin/env node
+const ora = require('ora')
+
 import crawler from './crawler'
 import args from './cli-config'
 
 const { url: [url] = [] } = args
 
-const timeout = ms => new Promise(resolve => setTimeout(resolve, ms))
-
 const runCrawler = async () => {
-  if (!url) {
-    console.log('Missing url argument, use --url http://domain.com')
-
-    return null
+  const dbProcess = {
+    isWriting: false
   }
+  const spinner = ora('Crawling website').start()
 
-  const data = await crawler(url)
-  const links = Object.keys(data)
+  spinner.color = 'green'
 
-  for (const link of links) {
-    if (data[link]) {
-      await timeout(100) // eslint-disable-line no-await-in-loop
-      await crawler(link) // eslint-disable-line no-await-in-loop
+  try {
+    if (!url) {
+      throw Error('Missing url argument, use --url http://domain.com')
     }
-  }
 
-  return null
+    const data = await crawler(url, dbProcess)
+    const links = Object.keys(data)
+
+    const results = []
+
+    for (const link of links) {
+      if (data[link]) {
+        results.push(crawler(link, dbProcess))
+      }
+    }
+
+    await Promise.all(results)
+
+    spinner.succeed('Crawling successful, note that the crawling is only shallow, run script again to crawl more links')
+
+    return true
+  }
+  catch (error) {
+    spinner.fail(error.message)
+
+    return false
+  }
 }
 
 runCrawler()
