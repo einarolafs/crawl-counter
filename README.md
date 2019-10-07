@@ -7,3 +7,7 @@ A CLI tool to collect all word found on a website and collect them onto a databa
 ## How to run
 
 To start the program, simply run `npm start --url http://domain.com`
+
+## Get documentation
+
+Code documentation is based on JSdocs, to build and view the documents locally run `npm run docs`
