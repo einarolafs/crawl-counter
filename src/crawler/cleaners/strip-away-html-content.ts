@@ -6,7 +6,7 @@
  * @param {object} content - {@link https://cheerio.js.org/ cheerio} object
  * @returns {string} - text only content without any html elements
  */
-const stripAwayHtmlContent = (content) => {
+const stripAwayHtmlContent = (content: CheerioStatic): string => {
   const itemsToRemove = [
     'style',
     'script',

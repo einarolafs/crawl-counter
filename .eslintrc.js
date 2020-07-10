@@ -1,9 +1,16 @@
 module.exports = {
-  parser: "babel-eslint",
+  parser: '@typescript-eslint/parser',
   env: {
     'node': true,
     'commonjs': true,
-    "jquery": true
+    "jquery": true // in order to support cheerio functions
+  },
+  settings: {
+    'import/resolver': {
+      node: {
+        extensions: ['.ts']
+      }
+    }
   },
   plugins: [
     'ava',
@@ -12,7 +19,8 @@ module.exports = {
     'node',
     'promise',
     'filenames',
-    'jsdoc'
+    'jsdoc',
+    '@typescript-eslint'
   ],
   extends: [
     'eslint:all',
@@ -20,7 +28,8 @@ module.exports = {
     'plugin:import/warnings',
     'plugin:promise/recommended',
     'plugin:ava/recommended',
-    'plugin:jsdoc/recommended'
+    'plugin:jsdoc/recommended',
+    'plugin:@typescript-eslint/recommended'
   ],
   rules: {
     'brace-style': ["error", "stroustrup"],

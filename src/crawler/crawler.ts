@@ -1,8 +1,9 @@
-import db, { addContent } from '../database'
+import db, { addContent} from '../database'
 import getContent from './get-content'
 import { DbProcess } from '../index'
+import { Links } from '../database/add-links'
 
-const crawler = (url: string, dbProcess: DbProcess): Promise<string[]> => new Promise((resolve, reject) => {
+const crawler = (url: string, dbProcess: DbProcess): Promise<Links> => new Promise((resolve, reject) => {
   const checkProcess = setInterval(async () => {
     try {
       if (!dbProcess.isWriting) {

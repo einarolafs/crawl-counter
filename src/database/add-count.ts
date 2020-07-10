@@ -1,4 +1,11 @@
-const addCount = (words, db) => {
+import lowdb from 'lowdb'
+
+export type WordCount = {
+  word: string,
+  count: number
+}
+
+const addCount = (words: WordCount[], db: lowdb) => {
   if (!words) {
     return null
   }

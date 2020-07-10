@@ -1,6 +1,5 @@
 #!/usr/bin/env node
-require("@babel/register")({extensions: ['.js', '.ts']})
-const ora = require('ora')
+import ora from 'ora'
 
 import crawler from './crawler'
 import args from './cli-config'
@@ -9,7 +8,11 @@ export type DbProcess = {
   isWriting: boolean
 }
 
-const { url: [url] = [] }: {url: string[]} = args
+interface CrawlCommandLineOptions {
+  url: string[]
+}
+
+const { url: [url] = [] } = <CrawlCommandLineOptions>args
 
 const runCrawler = async () => {
   const dbProcess: DbProcess = {
@@ -30,7 +33,7 @@ const runCrawler = async () => {
     const results = []
 
     for (const link of links) {
-      if (data[link]) {
+      if (data[link as any]) {
         results.push(crawler(link, dbProcess))
       }
     }

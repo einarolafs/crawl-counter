@@ -6,6 +6,6 @@
  * @param {string} link - The url link that will be extracted
  * @returns {boolean} - returns true if link is invalid, else false
  */
-const invalidLink = link => Boolean(link.match(/tel:|mailto:|^#/ug))
+const invalidLink = (link: string): boolean => Boolean(link.match(/tel:|mailto:|^#/ug))
 
 export default invalidLink

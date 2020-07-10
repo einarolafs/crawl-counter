@@ -5,8 +5,8 @@
 import low from 'lowdb'
 import FileSync from 'lowdb/adapters/FileSync'
 
-import addCount from './add-count'
-import addLinks from './add-links'
+import addCount, {WordCount} from './add-count'
+import addLinks, {Links} from './add-links'
 
 const adapter = new FileSync('temp/db.json')
 const database = low(adapter)
@@ -14,7 +14,7 @@ const database = low(adapter)
 database.defaults({ counts: [], links: {} })
   .write()
 
-const addContent = ({ counts, links }, url) => {
+const addContent = ({ counts, links }: {counts: WordCount[], links: Links}, url: string) => {
   addCount(counts, database)
 
   return addLinks(links, url, database)
