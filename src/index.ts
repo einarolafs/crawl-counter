@@ -1,13 +1,18 @@
 #!/usr/bin/env node
+require("@babel/register")({extensions: ['.js', '.ts']})
 const ora = require('ora')
 
 import crawler from './crawler'
 import args from './cli-config'
 
-const { url: [url] = [] } = args
+export type DbProcess = {
+  isWriting: boolean
+}
+
+const { url: [url] = [] }: {url: string[]} = args
 
 const runCrawler = async () => {
-  const dbProcess = {
+  const dbProcess: DbProcess = {
     isWriting: false
   }
   const spinner = ora('Crawling website').start()

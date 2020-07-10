@@ -20,8 +20,11 @@
     "@babel/cli": "^7.10.4",
     "@babel/core": "^7.10.4",
     "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.10.4",
     "@babel/plugin-transform-modules-commonjs": "^7.10.4",
+    "@babel/plugin-transform-runtime": "^7.10.4",
     "@babel/preset-env": "^7.10.4",
+    "@babel/preset-typescript": "^7.10.4",
     "@babel/register": "^7.10.4",
     "ava": "2.3.0",
     "babel-eslint": "^10.1.0",
@@ -38,7 +41,8 @@
     "eslint-plugin-promise": "^4.2.1",
     "husky": "^3.1.0",
     "jsdoc": "^3.6.4",
-    "live-server": "^1.2.1"
+    "live-server": "^1.2.1",
+    "typescript": "^3.9.6"
   },
   "scripts": {
     "prestart": "mkdir -p temp",
