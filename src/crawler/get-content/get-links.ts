@@ -1,4 +1,5 @@
 import { isAnotherDomain, invalidLink } from '../selectors'
+import { Links } from '../../database/add-links'
 
 /**
  * Get all links found in a html source that contain the given domain, returned as an object where each link is the key to prevent duplicates and all have a value of true to indicate that they are new and have not been crawled
@@ -11,16 +12,16 @@ import { isAnotherDomain, invalidLink } from '../selectors'
  * @param {string} domain - source domain to be extracted
  * @returns {object} - returns an array of links
  */
-const getLinks = (content, domain) => {
+const getLinks = (content: string, domain: string): Links => {
   const normalizeDomain = domain.replace(/\/$/gu, '')
-  const linksArray = content.match(/href="([^'"]+)/gum)
-  const links = {}
+  const linksArray = content.match(/href="([^'"]+)/gum) || []
+  const links: Links = {}
 
   linksArray.forEach((link) => {
     const cleanLink = link.replace(/href="|#.+/gu, '')
 
     if (!cleanLink || isAnotherDomain(cleanLink, domain) || invalidLink(cleanLink)) {
-      return null
+      return
     }
 
     if (!Object.keys(links).includes(link)) {
@@ -28,8 +29,6 @@ const getLinks = (content, domain) => {
         ? links[cleanLink] = true
         : links[`${normalizeDomain}${cleanLink}`] = true
     }
-
-    return null
   })
 
   return links

@@ -1,26 +1,41 @@
 module.exports = {
-  parser: "babel-eslint",
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    project: './tsconfig.json',
+    tsconfigRootDir: './'
+  },
   env: {
     'node': true,
     'commonjs': true,
-    "jquery": true
+    "jquery": true, // in order to support cheerio functions
+    "jest/globals": true
+  },
+  settings: {
+    'import/resolver': {
+      "typescript": {}
+    },
+    "import/extensions": [".js", ".ts",],
+    'import/parsers': {
+      '@typescript-eslint/parser': ['.ts', '.d.ts', '.js']
+    }
   },
   plugins: [
-    'ava',
-    "babel",
+    '@typescript-eslint',
+    'jest',
     'import',
     'node',
     'promise',
     'filenames',
-    'jsdoc'
+    'jsdoc',
   ],
   extends: [
     'eslint:all',
-    'plugin:import/errors',
-    'plugin:import/warnings',
     'plugin:promise/recommended',
-    'plugin:ava/recommended',
-    'plugin:jsdoc/recommended'
+    'plugin:jsdoc/recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended-requiring-type-checking',
+    'plugin:jest/recommended'
   ],
   rules: {
     'brace-style': ["error", "stroustrup"],
@@ -68,6 +83,5 @@ module.exports = {
     // https://github.com/selaux/eslint-plugin-filenames#rules
     'filenames/match-exported': ['error', 'kebab'],
     'filenames/no-index': 'off',
-    
   }
 }

@@ -6,7 +6,7 @@
  * @param {string} value - string
  * @returns {string} - returns a string without any special characters
  */
-const cleanUpString = (value) => {
+const cleanUpString = (value: string): string => {
   const regex = /^(@|-)|([!-\-/-?[-`{-~¡-¿–-⁊]|÷)|(,|\.)$/gu
 
   return value.replace(regex, '').replace(regex, '')

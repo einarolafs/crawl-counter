@@ -1,13 +1,21 @@
 #!/usr/bin/env node
-const ora = require('ora')
+import ora from 'ora'
 
 import crawler from './crawler'
 import args from './cli-config'
 
-const { url: [url] = [] } = args
+export type DbProcess = {
+  isWriting: boolean
+}
 
-const runCrawler = async () => {
-  const dbProcess = {
+interface CrawlCommandLineOptions {
+  url: string[]
+}
+
+const { url: [url] = [] } = <CrawlCommandLineOptions>args
+
+const runCrawler = async (): Promise<void> => {
+  const dbProcess: DbProcess = {
     isWriting: false
   }
   const spinner = ora('Crawling website').start()
@@ -25,7 +33,7 @@ const runCrawler = async () => {
     const results = []
 
     for (const link of links) {
-      if (data[link]) {
+      if (data[link as any]) {
         results.push(crawler(link, dbProcess))
       }
     }
@@ -33,14 +41,12 @@ const runCrawler = async () => {
     await Promise.all(results)
 
     spinner.succeed('Crawling successful, note that the crawling is only shallow, run script again to crawl more links')
-
-    return true
   }
   catch (error) {
-    spinner.fail(error.message)
-
-    return false
+    spinner.fail(error)
   }
 }
 
 runCrawler()
+  .then(() => null)
+  .catch(() => null)

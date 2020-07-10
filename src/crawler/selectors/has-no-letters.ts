@@ -6,6 +6,6 @@
  * @param {string} value - string to check against
  * @returns {boolean} - returns true if there are not letters in the string
  */
-const hasNoLetters = value => !value.match(/[A-Za-zÀ-ÖØ-öø-ÿ]/gu)
+const hasNoLetters = (value: string): boolean => !value.match(/[A-Za-zÀ-ÖØ-öø-ÿ]/gu)
 
 export default hasNoLetters

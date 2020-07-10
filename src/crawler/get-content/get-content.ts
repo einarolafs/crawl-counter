@@ -26,7 +26,7 @@ import getCount from './get-count'
  * @returns {getContentStructure} - Promise that will return a object containing word count and links found
  */
 
-const getContent = async (url) => {
+const getContent = async (url: string) => {
   try {
     const normalizeUrl = url.startsWith('http') ? url : `http://${url}`
 
@@ -45,11 +45,11 @@ const getContent = async (url) => {
 
     return {
       counts: getCount(text),
-      links: getLinks(content('body').html(), domain)
+      links: getLinks(content('body').html() || '', domain)
     }
   }
   catch (error) {
-    return error
+    return error as Error
   }
 }
 
