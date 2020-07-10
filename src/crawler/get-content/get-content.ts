@@ -49,7 +49,7 @@ const getContent = async (url: string) => {
     }
   }
   catch (error) {
-    return error
+    return error as Error
   }
 }
 

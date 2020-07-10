@@ -12,7 +12,7 @@ import { Links } from '../../database/add-links'
  * @param {string} domain - source domain to be extracted
  * @returns {object} - returns an array of links
  */
-const getLinks = (content: string, domain: string) => {
+const getLinks = (content: string, domain: string): Links => {
   const normalizeDomain = domain.replace(/\/$/gu, '')
   const linksArray = content.match(/href="([^'"]+)/gum) || []
   const links: Links = {}
@@ -21,7 +21,7 @@ const getLinks = (content: string, domain: string) => {
     const cleanLink = link.replace(/href="|#.+/gu, '')
 
     if (!cleanLink || isAnotherDomain(cleanLink, domain) || invalidLink(cleanLink)) {
-      return null
+      return
     }
 
     if (!Object.keys(links).includes(link)) {
@@ -29,8 +29,6 @@ const getLinks = (content: string, domain: string) => {
         ? links[cleanLink] = true
         : links[`${normalizeDomain}${cleanLink}`] = true
     }
-
-    return null
   })
 
   return links
