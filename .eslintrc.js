@@ -7,7 +7,8 @@ module.exports = {
   env: {
     'node': true,
     'commonjs': true,
-    "jquery": true // in order to support cheerio functions
+    "jquery": true, // in order to support cheerio functions
+    "jest/globals": true
   },
   settings: {
     'import/resolver': {
@@ -19,8 +20,8 @@ module.exports = {
     }
   },
   plugins: [
-    'ava',
     '@typescript-eslint',
+    'jest',
     'import',
     'node',
     'promise',
@@ -30,10 +31,11 @@ module.exports = {
   extends: [
     'eslint:all',
     'plugin:promise/recommended',
-    'plugin:ava/recommended',
     'plugin:jsdoc/recommended',
     'plugin:@typescript-eslint/recommended',
-    "plugin:@typescript-eslint/recommended-requiring-type-checking"
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended-requiring-type-checking',
+    'plugin:jest/recommended'
   ],
   rules: {
     'brace-style': ["error", "stroustrup"],
@@ -81,9 +83,5 @@ module.exports = {
     // https://github.com/selaux/eslint-plugin-filenames#rules
     'filenames/match-exported': ['error', 'kebab'],
     'filenames/no-index': 'off',
-
-    // https://github.com/avajs
-    'ava/no-ignored-test-files': ['off']
-    
   }
 }

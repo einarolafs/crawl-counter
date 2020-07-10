@@ -1,8 +1,8 @@
-import test from 'ava'
 import getLinks from '../get-links'
 
-test('hasNoLetters()', (t) => {
-  const htmlContent = `
+describe('hasNoLetters()', () => {
+  test('Returns all links found in a html markup', () => {
+    const htmlContent = `
     <!DOCTYPE html>
       <html>
       <body>
@@ -13,12 +13,13 @@ test('hasNoLetters()', (t) => {
     </html>
   `
 
-  const result = getLinks(htmlContent, 'http://www.domain.com/')
+    const result = getLinks(htmlContent, 'http://www.domain.com/')
 
-  const expected = {
-    'http://www.domain.com/link/foo/bar': true,
-    'http://www.domain.com/link2/foo/bar': true
-  }
+    const expected = {
+      'http://www.domain.com/link/foo/bar': true,
+      'http://www.domain.com/link2/foo/bar': true
+    }
 
-  t.deepEqual(result, expected)
+    expect(result).toStrictEqual(expected)
+  })
 })

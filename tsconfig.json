@@ -4,9 +4,16 @@
     "allowJs": true,
     "noEmit": true,
     "moduleResolution": "node",
-    "strict": true
+    "strict": true,
+    "baseUrl": ".",
+    "rootDir": "./src",
+    "outDir": "./dist",
   },
   "include": [
-    "./src/**/*"
+    "./src/**/*",
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
   ]
 }

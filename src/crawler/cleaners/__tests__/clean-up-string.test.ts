@@ -1,9 +1,10 @@
-import test from 'ava'
 import cleanUpString from '../clean-up-string'
 
-test('hasNoLetters()', (t) => {
+describe('clearnUpString()', () => {
   const result = cleanUpString('?content')
   const expected = 'content'
 
-  t.is(result, expected)
+  test('Returns a string that contains no special letters', () => {
+    expect(result).toBe(expected)
+  })
 })

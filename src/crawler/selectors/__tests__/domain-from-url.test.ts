@@ -1,10 +1,10 @@
-import test from 'ava'
 import domainFromUrl from '../domain-from-url'
 
-test('domainFromUrl()', (t) => {
-  const domain = domainFromUrl('http://www.mbl.is/extra/content')
+describe('domainFromUrl()', () => {
+  test('Return the correct domain from a url', () => {
+    const domain = 'http://www.mbl.is/'
+    const actual = domainFromUrl(`${domain}extra/content`)
 
-  if (domain === 'http://www.mbl.is/') {
-    t.pass()
-  }
+    expect(actual).toBe(domain)
+  })
 })

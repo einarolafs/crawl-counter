@@ -1,10 +1,15 @@
-import test from 'ava'
 import invalidLink from '../invalid-link'
 
-test('invalidLink()', (t) => {
-  const correctLink = invalidLink('http://link.com')
-  const incorrectLink = invalidLink('mailto://email@mail.com')
+describe('invalidLink()', () => {
+  test('Should return FALSE if link is normal website link', () => {
+    const correctLink = invalidLink('http://link.com')
 
-  t.false(correctLink)
-  t.true(incorrectLink)
+    expect(correctLink).toBeFalsy()
+  })
+
+  test('Should return TRUe if the link is not a normal website link', () => {
+    const incorrectLink = invalidLink('mailto://email@mail.com')
+
+    expect(incorrectLink).toBeTruthy()
+  })
 })

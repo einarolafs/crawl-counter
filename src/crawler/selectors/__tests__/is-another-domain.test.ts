@@ -1,11 +1,17 @@
-import test from 'ava'
 import isAnotherDomain from '../is-another-domain'
 
-test('hasNoLetters()', (t) => {
+describe('isAAnotherDomain', () => {
   const mainDomain = 'http://www.domain.com'
-  const isSameDomain = isAnotherDomain('http://www.domain.com/foo/bar', mainDomain)
-  const differentDomain = isAnotherDomain('http://www.anotherdomain.is/foo/bar', mainDomain)
 
-  t.false(isSameDomain)
-  t.true(differentDomain)
+  test('Return FALSE if a link contains another domain', () => {
+    const isSameDomain = isAnotherDomain('http://www.domain.com/foo/bar', mainDomain)
+
+    expect(isSameDomain).toBeFalsy()
+  })
+
+  test('Return TRUE if a link contains same domain', () => {
+    const differentDomain = isAnotherDomain('http://www.anotherdomain.is/foo/bar', mainDomain)
+
+    expect(differentDomain).toBeTruthy()
+  })
 })
