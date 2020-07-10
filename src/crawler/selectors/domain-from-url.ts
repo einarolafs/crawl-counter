@@ -7,7 +7,8 @@
  * @returns {string} - The domain extracted from the url
  */
 const domainFromUrl = (url: string): string => {
-  const [domain] = url.match(/http(?:s)?:\/\/(?:[\w-]+\.)*([\w-]{1,63})(?:\.(?:\w{3}|\w{2}))(?:$|\/)/gu) || [];
+  const [domain] = url.match(/http(?:s)?:\/\/(?:[\w-]+\.)*([\w-]{1,63})(?:\.(?:\w{3}|\w{2}))(?:$|\/)/gu) || []
+
   return domain
 }
 

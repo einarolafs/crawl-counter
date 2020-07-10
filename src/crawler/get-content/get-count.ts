@@ -3,8 +3,8 @@ import { hasNoLetters } from '../selectors'
 import { WordCount } from '../../database/add-count'
 
 /**
- * A function to extract, count and sort together all words found in a string content provided. 
- * It will return object that contain the word and their counts. 
+ * A function to extract, count and sort together all words found in a string content provided.
+ * It will return object that contain the word and their counts.
  * Structure is design to work with {@link https://github.com/typicode/lowdb lowdb}
  *
  * @memberof module:getContent

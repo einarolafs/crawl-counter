@@ -1,4 +1,4 @@
-import db, { addContent} from '../database'
+import db, { addContent } from '../database'
 import getContent from './get-content'
 import { DbProcess } from '../index'
 import { Links } from '../database/add-links'

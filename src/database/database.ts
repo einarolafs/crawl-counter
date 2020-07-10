@@ -5,8 +5,8 @@
 import low from 'lowdb'
 import FileSync from 'lowdb/adapters/FileSync'
 
-import addCount, {WordCount} from './add-count'
-import addLinks, {Links} from './add-links'
+import addCount, { WordCount } from './add-count'
+import addLinks, { Links } from './add-links'
 
 const adapter = new FileSync('temp/db.json')
 const database = low(adapter)
