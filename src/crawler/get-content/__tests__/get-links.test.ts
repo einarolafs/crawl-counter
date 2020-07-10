@@ -1,5 +1,5 @@
 import test from 'ava'
-import getLinks from './get-links'
+import getLinks from '../get-links'
 
 test('hasNoLetters()', (t) => {
   const htmlContent = `

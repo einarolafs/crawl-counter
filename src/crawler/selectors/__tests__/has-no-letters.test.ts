@@ -1,5 +1,5 @@
 import test from 'ava'
-import hasNoLetters from './has-no-letters'
+import hasNoLetters from '../has-no-letters'
 
 test('hasNoLetters()', (t) => {
   const hasLetters = hasNoLetters('contain letters')

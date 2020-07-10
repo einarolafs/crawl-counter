@@ -3,7 +3,10 @@
  *
  */
 import low from 'lowdb'
+/* eslint-disable import/no-unresolved */
+/* Ignore a false positive for this rule */
 import FileSync from 'lowdb/adapters/FileSync'
+/* eslint-enable */
 
 import addCount, { WordCount } from './add-count'
 import addLinks, { Links } from './add-links'

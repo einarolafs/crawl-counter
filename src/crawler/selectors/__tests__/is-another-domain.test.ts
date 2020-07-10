@@ -1,5 +1,5 @@
 import test from 'ava'
-import isAnotherDomain from './is-another-domain'
+import isAnotherDomain from '../is-another-domain'
 
 test('hasNoLetters()', (t) => {
   const mainDomain = 'http://www.domain.com'

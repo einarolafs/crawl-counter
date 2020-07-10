@@ -1,5 +1,5 @@
 import test from 'ava'
-import invalidLink from './invalid-link'
+import invalidLink from '../invalid-link'
 
 test('invalidLink()', (t) => {
   const correctLink = invalidLink('http://link.com')

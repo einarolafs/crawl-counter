@@ -1,5 +1,5 @@
 import test from 'ava'
-import getCount from './get-count'
+import getCount from '../get-count'
 
 test('hasNoLetters()', (t) => {
   // eslint-disable-next-line quotes

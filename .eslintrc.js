@@ -77,6 +77,9 @@ module.exports = {
     // https://github.com/selaux/eslint-plugin-filenames#rules
     'filenames/match-exported': ['error', 'kebab'],
     'filenames/no-index': 'off',
+
+    // https://github.com/avajs
+    'ava/no-ignored-test-files': ['off']
     
   }
 }
