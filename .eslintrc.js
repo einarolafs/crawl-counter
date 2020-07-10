@@ -1,5 +1,9 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
+  parserOptions: {
+    project: './tsconfig.json',
+    tsconfigRootDir: './'
+  },
   env: {
     'node': true,
     'commonjs': true,
@@ -7,29 +11,29 @@ module.exports = {
   },
   settings: {
     'import/resolver': {
-      node: {
-        extensions: ['.ts']
-      }
+      "typescript": {}
+    },
+    "import/extensions": [".js", ".ts",],
+    'import/parsers': {
+      '@typescript-eslint/parser': ['.ts', '.d.ts', '.js']
     }
   },
   plugins: [
     'ava',
-    "babel",
+    '@typescript-eslint',
     'import',
     'node',
     'promise',
     'filenames',
     'jsdoc',
-    '@typescript-eslint'
   ],
   extends: [
     'eslint:all',
-    'plugin:import/errors',
-    'plugin:import/warnings',
     'plugin:promise/recommended',
     'plugin:ava/recommended',
     'plugin:jsdoc/recommended',
-    'plugin:@typescript-eslint/recommended'
+    'plugin:@typescript-eslint/recommended',
+    "plugin:@typescript-eslint/recommended-requiring-type-checking"
   ],
   rules: {
     'brace-style': ["error", "stroustrup"],

@@ -1,29 +1,45 @@
-import lowdb from 'lowdb'
-
 export type WordCount = {
   word: string,
   count: number
 }
 
-const addCount = (words: WordCount[], db: lowdb) => {
+/* @todo Get a better lowdb typescript support to remove the mock interface below */
+interface mockDatabaseFunction {
+  get: (id: string) => {
+    find : ({ word }: {word: string}) => {
+      value: () => WordCount,
+      assign: ({ count }: {count: number}) => {
+        write: () => void
+    }
+    },
+    push: (word: WordCount) => {
+      write: () => void
+    },
+  }
+}
+
+
+const addCount = (words: WordCount[], db: mockDatabaseFunction): void => {
   if (!words) {
-    return null
+    return
   }
 
-  return words.forEach((newWord) => {
+  words.forEach((newWord) => {
     const { word, count } = newWord
-    const exists = db.get('counts').find({ word })
+    const exists: WordCount = db.get('counts').find({ word })
       .value()
 
     if (exists) {
       const newCount = exists.count + count
 
-      return db.get('counts').find({ word })
+      db.get('counts').find({ word })
         .assign({ count: newCount })
         .write()
+
+      return
     }
 
-    return db.get('counts').push(newWord)
+    db.get('counts').push(newWord)
       .write()
   })
 }

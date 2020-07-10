@@ -14,7 +14,7 @@ interface CrawlCommandLineOptions {
 
 const { url: [url] = [] } = <CrawlCommandLineOptions>args
 
-const runCrawler = async () => {
+const runCrawler = async (): Promise<void> => {
   const dbProcess: DbProcess = {
     isWriting: false
   }
@@ -41,14 +41,12 @@ const runCrawler = async () => {
     await Promise.all(results)
 
     spinner.succeed('Crawling successful, note that the crawling is only shallow, run script again to crawl more links')
-
-    return true
   }
   catch (error) {
-    spinner.fail(error.message)
-
-    return false
+    spinner.fail(error)
   }
 }
 
 runCrawler()
+  .then(() => null)
+  .catch(() => null)
