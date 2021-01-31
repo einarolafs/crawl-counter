@@ -21,7 +21,7 @@ const crawler = (url, dbProcess) => new Promise((resolve, reject) => {
           dbProcess.isWriting = false
           resolve(links)
 
-          return true
+          return
         }
 
         const content = await getContent(url)
@@ -33,17 +33,15 @@ const crawler = (url, dbProcess) => new Promise((resolve, reject) => {
         dbProcess.isWriting = false
 
         resolve(linksFound)
-
-        return true
       }
-
-      return false
     }
     catch (error) {
+      clearInterval(checkProcess)
       reject(error)
-      dbProcess.isWriting = false
 
-      return error
+      /* re-enable writing to the database */
+      // eslint-disable-next-line require-atomic-updates
+      dbProcess.isWriting = false
     }
   }, 500)
 })

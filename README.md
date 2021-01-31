@@ -6,7 +6,9 @@ A CLI tool to collect all word found on a website and collect them onto a databa
 
 ## How to run
 
-To start the program, simply run `npm start --url http://domain.com`
+To start the program, simply run `npm start -- --url http://domain.com`
+
+The program only does a shallow crawl and collect links for another run, to continue more crawls, run `npm start -- --url http://domain.com`
 
 ## Get documentation
 
