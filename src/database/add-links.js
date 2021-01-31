@@ -1,17 +1,11 @@
-const addLinks = (links, url, db) => {
-  const newLinks = { ...links }
+const addLinks = (newLinks, url, db) => {
+  const oldLinks = db.get('links').value()
 
-  Object.entries(newLinks).forEach(([key, value]) => {
-    if (!newLinks[key]) {
-      newLinks[key] = value
-    }
-  })
+  const links = { ...newLinks, ...oldLinks }
 
-  newLinks[url] = false
+  links[url] = false
 
-  db.set('links', newLinks).write()
-
-  return newLinks
+  return links
 }
 
 export default addLinks
