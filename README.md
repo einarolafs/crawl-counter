@@ -13,3 +13,5 @@ The program only does a shallow crawl and collect links for another run, to cont
 ## Get documentation
 
 Code documentation is based on JSdocs, to build and view the documents locally run `npm run docs`
+
+The tool is experimental, not in active develoopment!
